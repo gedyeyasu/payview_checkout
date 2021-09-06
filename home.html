@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script
+      async
+      src="payview.js"
+      onload="onPayViewLoaded()"
+      type="text/javascript"
+    ></script>
+    <title>Test ecommerce Website</title>
+  </head>
+  <body>
+    <h1>Test eccommerce site</h1>
+    <h2>Integrate PayView Payment Module</h2>
+    <button onclick="paypalClicked()">Paypal</button>
+    <div id="payview-container"></div>
+  </body>
+
+  <script>
+    const clientConfiguration = {
+      apiVersion: 1,
+      merchant_key: "E5gCoqpx",
+      merchant_token: "c9010614-004c-426c-910e-9be115ee9366",
+    };
+    function onPayViewButtonClicked() {
+      // get all transaction detail from the client system
+      const transactionConfiguration = {
+        totalPriceStatus: "Final",
+        totalPrice: "120.45",
+        currencyCode: "ETB",
+        serviceName: "Amazon",
+      };
+      return transactionConfiguration;
+    }
+
+    function onPayViewLoaded() {
+      console.log("pay.js loaded");
+      payViewClient = new PayViewClient({
+        environment: "TEST/PRODUCTION",
+        clientConfiguration: clientConfiguration,
+      });
+
+      payViewClient.createButton({
+        // defualts to black if default or empty
+        buttonColor: "default",
+        buttonType: "long", //default is long
+        lang: "en", // default is English /AMH
+        onClick: onPayViewButtonClicked(),
+      });
+    }
+
+    function onPaymentDone() {
+      // after a payment is processed this function get called based on the
+      // returned value set system values
+      const result = payViewClient.onPaymentDone();
+      if (result == true) {
+        // payment is sucess give customer value
+        console.log("merchant payment sucess");
+      } else {
+        // payment ha failed
+        console.log("merchant payment failed");
+      }
+    }
+  </script>
+</html>
